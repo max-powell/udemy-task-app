@@ -7,18 +7,25 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
 
 const User = mongoose.model('User', {
   name: {
-    type: String
+    type: String,
+    required: true
   },
   age: {
-    type: Number
+    type: Number,
+    validate: {
+      validator(v) {
+        return !!(v > 0)
+      },
+      message: 'Age must be a positive number'
+    }
   }
 })
 
-// const me = new User({name: 'Max', age: 'a'})
-//
-// me.save()
-//   .then(console.log)
-//   .catch(console.log)
+const me = new User({name: 'Bob', age: -1})
+
+me.save()
+  .then(console.log)
+  .catch(console.log)
 
 const Task = mongoose.model('Task', {
   description: {
@@ -29,8 +36,8 @@ const Task = mongoose.model('Task', {
   }
 })
 
-const firstTask = new Task({description: 'First task', completed: true})
-
-firstTask.save()
-  .then(console.log)
-  .catch(console.log)
+// const firstTask = new Task({description: 'First task', completed: true})
+//
+// firstTask.save()
+//   .then(console.log)
+//   .catch(console.log)
