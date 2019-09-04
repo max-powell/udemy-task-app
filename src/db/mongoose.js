@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
 
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
   useNewUrlParser: true,
@@ -13,10 +14,22 @@ const User = mongoose.model('User', {
   age: {
     type: Number,
     validate: {
-      validator(v) {
-        return !!(v > 0)
+      validator(value) {
+        return !!(value > 0)
       },
       message: 'Age must be a positive number'
+    },
+    email: {
+      type: String,
+      requires: true,
+      validate: {
+        validator(value) {
+          validator.isEmail(value)
+        },
+        message({value}) {
+          return `${v} is not a valid email`
+        }
+      }
     }
   }
 })
