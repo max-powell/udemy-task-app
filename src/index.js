@@ -42,6 +42,12 @@ app.post('/tasks', (req, res) => {
   .catch((e) => res.status(400).send(e))
 })
 
+app.get('/tasks', (req, res) => {
+  Task.find({})
+  .then(tasks => res.send(tasks))
+  .catch(() => res.status(500).send())
+})
+
 app.listen(port, () => {
   console.log('Server up on port ' + port)
 })
