@@ -42,6 +42,34 @@ app.get('/users/:id', async (req, res) => {
   }
 })
 
+app.patch('/users/:id', async (req, res) => {
+  const _id = req.params.id
+  const updates = req.body
+  const allowedUpdates = Object.keys(User.schema.obj)
+
+  const isValid = Object.keys(updates).every(u => allowedUpdates.includes(u))
+
+  if (!isValid) {
+    res.status(400).send({error: 'Invalid fields'})
+  }
+
+  try {
+
+    const user = await User.findByIdAndUpdate(_id, updates, {
+      new: true,
+      runValidators: true
+    })
+
+    if (!user) {
+      return res.status(404).send()
+    }
+
+    res.send(user)
+  } catch (e) {
+    res.status(400).send(e)
+  }
+})
+
 app.post('/tasks', async (req, res) => {
   const task = new Task(req.body)
 
