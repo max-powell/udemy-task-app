@@ -45,11 +45,19 @@ const userSchema = mongoose.Schema({
       message: 'Password can not contain "password"'
     },
     trim: true
-  }
+  },
+  tokens: [{
+    token: {
+      type: String,
+      required: true
+    }
+  }]
 })
 
 userSchema.methods.generateAuthToken = async function() {
   const token = jwt.sign({_id: this._id}, 'secret')
+  this.tokens = this.tokens.concat({token})
+  await this.save()
   return token
 }
 
