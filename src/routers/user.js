@@ -8,6 +8,7 @@ router.post('/users', async (req, res) => {
     await user.save()
     res.status(201).send(user)
   } catch (e) {
+    console.log(e);
     res.status(400).send(e)
   }
 })
@@ -47,11 +48,13 @@ router.patch('/users/:id', async (req, res) => {
   }
 
   try {
+    const user = await User.findById(_id)
 
-    const user = await User.findByIdAndUpdate(_id, updates, {
-      new: true,
-      runValidators: true
-    })
+    for (u in updates) {
+      user[u] = updates[u]
+    }
+
+    await user.save()
 
     if (!user) {
       return res.status(404).send()
