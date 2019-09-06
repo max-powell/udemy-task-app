@@ -52,8 +52,7 @@ router.get('/users/me', auth, async (req, res) => {
   res.send(req.user)
 })
 
-router.patch('/users/:id', async (req, res) => {
-  const _id = req.params.id
+router.patch('/users/me', auth, async (req, res) => {
   const updates = req.body
   const allowedUpdates = Object.keys(User.schema.obj)
 
@@ -64,7 +63,7 @@ router.patch('/users/:id', async (req, res) => {
   }
 
   try {
-    const user = await User.findById(_id)
+    const user = req.user
 
     for (u in updates) {
       user[u] = updates[u]
